@@ -433,7 +433,17 @@ cd CodexMobile
 open CodexMobile.xcodeproj
 ```
 
-Build and run on a physical device or simulator with Xcode. The app uses SwiftUI and the current project target is iOS 18.6.
+Build and run on a physical device or simulator with Xcode. The app uses SwiftUI and the current project target is iOS 18.5.
+
+For your own Apple Developer account / TestFlight upload:
+
+1. Copy `CodexMobile/BuildSupport/PrivateOverrides.xcconfig.example` to `CodexMobile/BuildSupport/PrivateOverrides.xcconfig`.
+2. Set `REMODEX_DEVELOPMENT_TEAM` to your Apple team ID.
+3. Set `REMODEX_APP_BUNDLE_IDENTIFIER` to an App ID you control, for example `com.yourcompany.remodex`.
+4. Open the project in Xcode, select the `CodexMobile` target, and confirm Signing uses your team with automatic signing enabled.
+5. Archive from Xcode and upload with Organizer to TestFlight.
+
+The open-source default project now strips out the original app's `Push Notifications` and `Sign in with Apple` entitlements so a personal developer account can archive and upload with fewer App ID capability requirements. RevenueCat code is still present, but if you do not configure your own products the subscription UI should be treated as non-production.
 
 ## Contributing
 

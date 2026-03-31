@@ -19,11 +19,11 @@ private struct AdaptiveGlassModifier<S: Shape>: ViewModifier {
     let shape: S
 
     func body(content: Content) -> some View {
-        if #available(iOS 26, *), glassEnabled {
+        if glassEnabled {
             if regularStyle {
-                content.glassEffect(.regular, in: shape)
+                content.background(.regularMaterial, in: shape)
             } else {
-                content.glassEffect(in: shape)
+                content.background(.thinMaterial, in: shape)
             }
         } else {
             content.background(.thinMaterial, in: shape)

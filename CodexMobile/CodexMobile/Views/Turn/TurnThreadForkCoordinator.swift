@@ -52,6 +52,7 @@ enum TurnThreadForkCoordinator {
     }
 
     // Waits for runtime readiness before attempting a non-idempotent worktree fork request.
+    @MainActor
     static func forkThreadIntoPreparedWorktree(
         codex: CodexService,
         sourceThreadId: String,
@@ -65,6 +66,7 @@ enum TurnThreadForkCoordinator {
     }
 
     // Gives reconnect/initialize a brief window before the fork flow calls into the runtime.
+    @MainActor
     static func awaitPreparedWorktreeForkReadiness(codex: CodexService) async throws {
         for (index, delay) in readinessRetryDelays.enumerated() {
             if delay > 0 {
@@ -87,6 +89,7 @@ enum TurnThreadForkCoordinator {
     }
 
     // Cleans up only when the runtime definitely failed before creating a durable forked thread.
+    @MainActor
     static func cleanupResultForFailedWorktreeFork(
         _ result: GitCreateWorktreeResult,
         sourceWorkingDirectory: String?,
@@ -171,6 +174,7 @@ enum TurnThreadForkCoordinator {
     }
 
     // Removes a temporary managed worktree and refreshes the source thread's branch cache if needed.
+    @MainActor
     private static func cleanupFailedForkWorktree(
         _ result: GitCreateWorktreeResult,
         sourceWorkingDirectory: String?,
@@ -187,7 +191,7 @@ enum TurnThreadForkCoordinator {
             try await cleanupService.removeManagedWorktree(branch: result.branch)
             viewModel.forgetGitWorktree(branch: result.branch, worktreePath: result.worktreePath)
             if let sourceWorkingDirectory {
-                viewModel.refreshGitBranchTargets(
+                await viewModel.refreshGitBranchTargets(
                     codex: codex,
                     workingDirectory: sourceWorkingDirectory,
                     threadID: threadID
